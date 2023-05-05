@@ -1,0 +1,104 @@
+openapi: 3.0.1
+info:
+  title: OCR Implementation Service
+  version: 1.0.0
+  description: |
+    # About the service
+    `OCR Implementation` is for when ***UD RM*** uploads corporate document,some of the details should be extracted from the PDF and should be pre-populate the data capturing screens.
+  x-custom-info:
+    authors:
+      name: Dasun Anushka
+      email: lakmal.thanthrige@101digital.io
+servers:
+  - url: http://localhost:8090
+security:
+  - BearerAuth: []
+paths:
+  /ocr-implementation-service/1.0.0/files:
+    post:
+      operationId: extractPdfFields
+      tags:
+        - OCR Implementation Service
+      summary: Endpoint to pass the PDF as Base64 string values and fetch the required fileds.
+      description: To extract PDF fields, This API allows user to send a PDF file as a Base64 encoded string.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: object
+                  properties:
+                    content:
+                      type: string
+                    name:
+                      type: string
+                    contentType:
+                      type: string
+                    fileType:
+                      type: string
+      responses:
+        '200':
+          description: Data extracted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      fields:
+                        type: object
+        '401':
+          description: Access failure for the *API*
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+        '404':
+          description: File not found or relevant fields not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+        '500':
+          description: Unexpected error while performing file operations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
